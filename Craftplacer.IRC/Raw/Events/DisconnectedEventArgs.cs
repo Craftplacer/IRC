@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Craftplacer.IRC.Events.Raw
+namespace Craftplacer.IRC.Raw.Events
 {
     public class DisconnectedEventArgs : RawEventArgs
     {
@@ -9,7 +9,7 @@ namespace Craftplacer.IRC.Events.Raw
         {
             Exception = exception;
         }
-        
+
         [MaybeNull]
         public Exception Exception { get; }
     }

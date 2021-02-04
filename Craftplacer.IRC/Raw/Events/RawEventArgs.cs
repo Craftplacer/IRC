@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Craftplacer.IRC.Events.Raw
+namespace Craftplacer.IRC.Raw.Events
 {
     public class RawEventArgs : EventArgs
     {
@@ -9,6 +9,6 @@ namespace Craftplacer.IRC.Events.Raw
             Client = client;
         }
 
-        public RawIrcClient Client { get; }       
+        public RawIrcClient Client { get; }
     }
 }

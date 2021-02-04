@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Craftplacer.IRC.Messages
+namespace Craftplacer.IRC.Raw.Messages
 {
     public class RawMessage
     {
@@ -8,7 +8,7 @@ namespace Craftplacer.IRC.Messages
         {
             if (string.IsNullOrWhiteSpace(command))
                 throw new System.ArgumentException($"'{nameof(command)}' cannot be null or whitespace", nameof(command));
-            
+
             this.Command = command;
             this.Parameters = parameters;
         }

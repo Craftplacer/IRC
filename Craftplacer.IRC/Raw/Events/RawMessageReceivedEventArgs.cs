@@ -1,6 +1,6 @@
-﻿using Craftplacer.IRC.Messages;
+﻿using Craftplacer.IRC.Raw.Messages;
 
-namespace Craftplacer.IRC.Events.Raw
+namespace Craftplacer.IRC.Raw.Events
 {
     public class RawMessageReceivedEventArgs : RawEventArgs
     {
@@ -8,7 +8,7 @@ namespace Craftplacer.IRC.Events.Raw
         {
             Message = message;
         }
-        
+
         public RawMessage Message { get; }
     }
 }
