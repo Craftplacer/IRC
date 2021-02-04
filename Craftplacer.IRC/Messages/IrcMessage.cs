@@ -1,4 +1,6 @@
-﻿namespace Craftplacer.IRC.Messages
+﻿using Craftplacer.IRC.Raw.Messages;
+
+namespace Craftplacer.IRC.Messages
 {
     /// <summary>
     /// Base class allowing of de-/serialization of messages. 

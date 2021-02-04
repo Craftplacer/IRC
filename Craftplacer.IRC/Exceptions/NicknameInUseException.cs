@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Craftplacer.IRC.Messages;
-
+using Craftplacer.IRC.Raw.Messages;
 
 namespace Craftplacer.IRC.Exceptions
 {

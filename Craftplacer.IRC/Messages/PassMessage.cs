@@ -1,4 +1,6 @@
-﻿namespace Craftplacer.IRC.Messages
+﻿using Craftplacer.IRC.Raw.Messages;
+
+namespace Craftplacer.IRC.Messages
 {
     public class PassMessage : IrcMessage
     {

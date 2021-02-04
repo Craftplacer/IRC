@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Craftplacer.IRC.Raw.Messages;
+
 namespace Craftplacer.IRC.Messages
 {
     public class NickMessage : IrcMessage

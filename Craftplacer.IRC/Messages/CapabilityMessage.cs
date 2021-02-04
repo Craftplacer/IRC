@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Craftplacer.IRC.Raw.Messages;
+
 namespace Craftplacer.IRC.Messages
 {
     public class CapabilityMessage : IrcMessage

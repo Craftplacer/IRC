@@ -1,5 +1,4 @@
-﻿
-using Craftplacer.IRC.Messages;
+﻿using Craftplacer.IRC.Raw.Messages;
 
 namespace Craftplacer.IRC.Exceptions
 {
