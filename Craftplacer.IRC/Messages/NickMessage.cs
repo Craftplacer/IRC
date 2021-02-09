@@ -4,7 +4,7 @@ using Craftplacer.IRC.Raw.Messages;
 
 namespace Craftplacer.IRC.Messages
 {
-    public class NickMessage : IrcMessage
+    public class NickMessage : IrcProtocolMessage
     {
         public NickMessage([NotNull] string nickname)
         {

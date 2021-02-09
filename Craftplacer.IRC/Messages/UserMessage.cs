@@ -2,7 +2,7 @@
 
 namespace Craftplacer.IRC.Messages
 {
-    public class UserMessage : IrcMessage
+    public class UserMessage : IrcProtocolMessage
     {
         public UserMessage(string username, string realName)
         {

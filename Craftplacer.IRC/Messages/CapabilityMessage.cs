@@ -5,7 +5,7 @@ using Craftplacer.IRC.Raw.Messages;
 
 namespace Craftplacer.IRC.Messages
 {
-    public class CapabilityMessage : IrcMessage
+    public class CapabilityMessage : IrcProtocolMessage
     {
         public CapabilityMessage(string subCommand, params string[] parameters)
         {

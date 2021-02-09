@@ -2,7 +2,7 @@
 
 namespace Craftplacer.IRC.Messages
 {
-    public class PassMessage : IrcMessage
+    public class PassMessage : IrcProtocolMessage
     {
         public PassMessage(string password)
         {
