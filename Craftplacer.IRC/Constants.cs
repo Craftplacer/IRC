@@ -8,5 +8,6 @@
         public const char SourceCharacter = ':';
         public const char SpaceCharacter = ' ';
         public const char ParameterCharacter = ':';
+        public const char TrailingCharacter = ':';
     }
 }
