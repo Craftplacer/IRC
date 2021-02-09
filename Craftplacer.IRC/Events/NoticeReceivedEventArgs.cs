@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 using Craftplacer.IRC.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Craftplacer.IRC.Events
 {
