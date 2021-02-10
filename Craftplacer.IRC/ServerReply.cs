@@ -30,7 +30,7 @@
         RPL_WHOISIDLE = 317,
         RPL_ENDOFWHOIS = 318,
         RPL_WHOISCHANNELS = 319,
-        RPL_LISTSTART = 312,
+        RPL_LISTSTART = 321,
         RPL_LIST = 322,
         RPL_LISTEND = 323,
         RPL_CHANNELMODEIS = 324,
