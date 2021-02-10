@@ -2,6 +2,11 @@
 {
     public enum ServerReply
     {
+        RPL_WELCOME = 001,
+        RPL_YOURHOST = 002,
+        RPL_CREATED = 003,
+        RPL_MYINFO = 004,
+        RPL_ISUPPORT = 005,
         RPL_BOUNCE = 010,
         RPL_UMODEIS = 221,
         RPL_LUSERCLIENT = 251,
