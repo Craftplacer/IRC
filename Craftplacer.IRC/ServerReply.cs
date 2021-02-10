@@ -60,10 +60,27 @@
         RPL_YOUREOPER = 381,
         RPL_REHASHING = 382,
         ERR_UNKNOWNERROR = 400,
+        ERR_NOSUCHNICK = 401,
+        ERR_NOSUCHSERVER = 402,
+        ERR_NOSUCHCHANNEL = 403,
+        ERR_CANNOTSENDTOCHAN = 404,
+        ERR_TOOMANYCHANNELS = 405,
         /* ... */
         ERR_NONICKNAMEGIVEN = 431,
         ERR_ERRONEUSNICKNAME = 432,
         ERR_NICKNAMEINUSE = 433,
         ERR_NICKCOLLISION = 436,
+        /* ... */
+        ERR_NEEDMOREPARAMS = 461,
+        ERR_ALREADYREGISTERED = 462,
+        ERR_PASSWORDMISMATCH = 464,
+        /* ... */
+        ERR_CHANNELISFULL = 471,
+        ERR_INVITEONLYCHAN = 473,
+        ERR_UNKNOWNMODE = 472,
+        ERR_BANNEDFROMCHAN = 474,
+        ERR_BADCHANNELKEY = 475,
+        /* ... */
+        ERR_NOOPERHOST = 491,
     }
 }
