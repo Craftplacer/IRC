@@ -21,7 +21,10 @@ namespace Craftplacer.IRC.Raw
         private Stream stream;
         private StreamWriter writer;
         private StreamReader reader;
+
         public event EventHandler<RawMessageReceivedEventArgs> MessageReceived;
+
+        public bool Connected => tcp.Connected;
 
         public async Task ConnectAsync(string host, int port, bool ssl = false)
         {
