@@ -10,7 +10,7 @@ namespace Craftplacer.IRC.Events
         {
             UserParted = user;
         }
-        
+
         public IrcUser UserParted { get; }
     }
 }

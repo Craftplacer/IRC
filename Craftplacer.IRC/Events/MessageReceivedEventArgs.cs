@@ -10,7 +10,7 @@ namespace Craftplacer.IRC.Events
         {
             Message = message;
         }
-        
+
         public IrcProtocolMessage Message { get; }
     }
 }

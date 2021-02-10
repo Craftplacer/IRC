@@ -19,10 +19,10 @@ namespace Craftplacer.IRC.Raw.Messages
             if (string.IsNullOrWhiteSpace(command))
                 throw new System.ArgumentException($"'{nameof(command)}' cannot be null or whitespace", nameof(command));
 
-            this.Command = command;
-            this.Source = source;
-            this.Parameters = parameters;
-            this.Tags = tags;
+            Command = command;
+            Source = source;
+            Parameters = parameters;
+            Tags = tags;
         }
 
         [NotNull]
@@ -160,10 +160,10 @@ namespace Craftplacer.IRC.Raw.Messages
         {
             if (obj is RawMessage raw)
             {
-                return raw.Command == this.Command
-                    && raw.Source == this.Source
-                    && Utilities.SafeSequenceEqual(raw.Parameters, this.Parameters)
-                    && Utilities.SafeSequenceEqual(raw.Tags, this.Tags);
+                return raw.Command == Command
+                    && raw.Source == Source
+                    && Utilities.SafeSequenceEqual(raw.Parameters, Parameters)
+                    && Utilities.SafeSequenceEqual(raw.Tags, Tags);
             }
 
             return false;

@@ -1,5 +1,6 @@
-﻿using Craftplacer.IRC.Entities;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Craftplacer.IRC.Entities;
 
 namespace Craftplacer.IRC.Events
 {
@@ -10,9 +11,9 @@ namespace Craftplacer.IRC.Events
             UserJoined = user;
             Channel = channel;
         }
-        
+
         public IrcUser UserJoined { get; }
-        
+
         public IrcChannel Channel { get; }
     }
 }

@@ -14,7 +14,7 @@ namespace Craftplacer.IRC.Messages
         }
 
         public string SubCommand { get; set; }
-        
+
         public List<string> Parameters { get; set; }
 
         public override RawMessage ProtocolMessage

@@ -13,7 +13,7 @@ namespace Craftplacer.IRC.Messages
 
         [NotNull]
         public string Nickname { get; set; }
-        
+
         public override RawMessage ProtocolMessage => new RawMessage("NICK", Nickname);
     }
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
 using Craftplacer.IRC.Helpers;
 
 namespace Craftplacer.IRC.Entities
@@ -10,11 +10,11 @@ namespace Craftplacer.IRC.Entities
         {
             (Nickname, Username, Host) = Utilities.ExtractHostmask(hostmask);
         }
-        
+
         public string Host { get; }
 
         public string Nickname { get; }
-        
+
         public string Username { get; }
 
         public async Task SendMessageAsync(string message)

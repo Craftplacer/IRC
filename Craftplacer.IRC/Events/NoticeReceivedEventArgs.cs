@@ -10,7 +10,7 @@ namespace Craftplacer.IRC.Events
         {
             Notice = notice;
         }
-        
+
         public IrcNotice Notice { get; }
     }
 }

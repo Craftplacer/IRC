@@ -6,10 +6,10 @@ namespace Craftplacer.IRC.Exceptions
     {
         public IrcException(ServerReply reply, string v, RawMessage response, RawMessage request)
         {
-            this.Reply = reply;
-            this.Message = v;
-            this.Response = response;
-            this.Request = request;
+            Reply = reply;
+            Message = v;
+            Response = response;
+            Request = request;
         }
 
         public ServerReply Reply { get; }

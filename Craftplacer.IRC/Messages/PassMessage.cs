@@ -10,7 +10,7 @@ namespace Craftplacer.IRC.Messages
         }
 
         public string Password { get; }
-        
+
         public override RawMessage ProtocolMessage => new RawMessage("PASS", Password);
     }
 }
