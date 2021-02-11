@@ -1,6 +1,6 @@
 ﻿namespace Craftplacer.IRC
 {
-    public static class Constants
+    public static class CharConstants
     {
         public const char TagCharacter = '@';
         public const char TagSetCharacter = '=';

@@ -42,7 +42,7 @@ namespace Craftplacer.IRC.Raw.Messages
             // TODO: This *could* be better or more efficient,
             //       but it works.
 
-            var values = line.Split(Constants.SpaceCharacter);
+            var values = line.Split(CharConstants.SpaceCharacter);
 
             string source = null;
             string command = null;
@@ -55,12 +55,12 @@ namespace Craftplacer.IRC.Raw.Messages
 
                 if (command == null)
                 {
-                    if (value[0] == Constants.TagCharacter && tags == null)
+                    if (value[0] == CharConstants.TagCharacter && tags == null)
                     {
-                        var pairs = value[1..].Split(Constants.TagSeparatorCharacter);
+                        var pairs = value[1..].Split(CharConstants.TagSeparatorCharacter);
                         tags = new Dictionary<string, string>(pairs.Select(p =>
                         {
-                            var split = p.Split(Constants.TagSetCharacter, 2);
+                            var split = p.Split(CharConstants.TagSetCharacter, 2);
 
                             if (split.Length == 0 || split.Length > 2)
                             {
@@ -70,7 +70,7 @@ namespace Craftplacer.IRC.Raw.Messages
                             return new KeyValuePair<string, string>(split[0], split.Length == 2 ? split[1] : null);
                         }));
                     }
-                    else if (value[0] == Constants.SourceCharacter && source == null)
+                    else if (value[0] == CharConstants.SourceCharacter && source == null)
                     {
                         source = value[1..];
                     }
@@ -79,12 +79,12 @@ namespace Craftplacer.IRC.Raw.Messages
                         command = value;
                     }
                 }
-                else if (value[0] == Constants.TrailingCharacter)
+                else if (value[0] == CharConstants.TrailingCharacter)
                 {
                     // Remove : from this parameter
                     values[i] = value[1..];
 
-                    parameters.Add(string.Join(Constants.SpaceCharacter, values.Skip(i)));
+                    parameters.Add(string.Join(CharConstants.SpaceCharacter, values.Skip(i)));
 
                     // It makes no sense to further parse parameters,
                     // as the : character ignores spaces and takes the rest as parameter.
@@ -114,16 +114,16 @@ namespace Craftplacer.IRC.Raw.Messages
                     }
                     else
                     {
-                        return t.Key + Constants.TagSetCharacter + t.Value;
+                        return t.Key + CharConstants.TagSetCharacter + t.Value;
                     }
                 });
 
-                values.Add(Constants.TagCharacter + string.Join(Constants.TagSeparatorCharacter, tagValues));
+                values.Add(CharConstants.TagCharacter + string.Join(CharConstants.TagSeparatorCharacter, tagValues));
             }
 
             if (Source != null)
             {
-                values.Add(Constants.SourceCharacter + Source);
+                values.Add(CharConstants.SourceCharacter + Source);
             }
 
             if (Command != null)
@@ -141,7 +141,7 @@ namespace Craftplacer.IRC.Raw.Messages
                     {
                         if (i == Parameters.Length - 1)
                         {
-                            param = Constants.TrailingCharacter + param;
+                            param = CharConstants.TrailingCharacter + param;
                         }
                         else
                         {
@@ -153,7 +153,7 @@ namespace Craftplacer.IRC.Raw.Messages
                 }
             }
 
-            return string.Join(Constants.SpaceCharacter, values);
+            return string.Join(CharConstants.SpaceCharacter, values);
         }
 
         public override bool Equals(object obj)
