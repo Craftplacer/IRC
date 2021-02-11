@@ -28,7 +28,7 @@ namespace Craftplacer.IRC
                     {
                         if (_motdBuffer != null)
                         {
-                            _motdBuffer.AppendLine(e.Message.Parameters[0]);
+                            _motdBuffer.AppendLine(e.Message.Parameters[1]);
                         }
                         break;
                     }
@@ -40,7 +40,7 @@ namespace Craftplacer.IRC
                             _motdBuffer = new StringBuilder();
                         }
 
-                        _motdBuffer.AppendLine(e.Message.Parameters[0]);
+                        _motdBuffer.AppendLine(e.Message.Parameters[1]);
                         break;
                     }
 
