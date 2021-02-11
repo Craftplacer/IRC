@@ -10,11 +10,11 @@ namespace Craftplacer.IRC.Raw.Messages
     // https://modern.ircdocs.horse/index.html#messages
     public class RawMessage
     {
-        public RawMessage(string command, params string[] parameters) : this(command, null, parameters, null)
+        public RawMessage(string command, params string[] parameters) : this(command, parameters, null, null)
         {
         }
 
-        public RawMessage(string command, string source = null, string[] parameters = null, Dictionary<string, string> tags = null)
+        public RawMessage(string command, string[] parameters = null, string source = null, Dictionary<string, string> tags = null)
         {
             if (string.IsNullOrWhiteSpace(command))
                 throw new System.ArgumentException($"'{nameof(command)}' cannot be null or whitespace", nameof(command));
@@ -96,7 +96,7 @@ namespace Craftplacer.IRC.Raw.Messages
                 }
             }
 
-            return new RawMessage(command, source, parameters.ToArray(), tags);
+            return new RawMessage(command, parameters.ToArray(), source, tags);
         }
 
         public override string ToString()
