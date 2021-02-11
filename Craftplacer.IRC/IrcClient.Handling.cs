@@ -51,6 +51,18 @@ namespace Craftplacer.IRC
                         break;
                     }
 
+                    case ServerReply.RPL_LUSERCLIENT:
+                    case ServerReply.RPL_LUSEROP:
+                    case ServerReply.RPL_LUSERUNKNOWN:
+                    case ServerReply.RPL_LUSERCHANNELS:
+                    case ServerReply.RPL_LUSERME:
+                    case ServerReply.RPL_LOCALUSERS:
+                    case ServerReply.RPL_GLOBALUSERS:
+                    {
+                        // Those reply contain strings intended for humans, thus can't be parsed.
+                        break;
+                    }
+
                     default:
                     {
                         Debug.WriteLine("Unhandled IRC server reply: {1} ({0}) {2}", e.Message.Command, reply, string.Join(' ', e.Message.Parameters));
