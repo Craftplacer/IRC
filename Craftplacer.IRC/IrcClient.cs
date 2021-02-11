@@ -15,7 +15,7 @@ namespace Craftplacer.IRC
     {
         private static readonly string[] _supportedCapabilities = new string[]
         {
-            "message-tags"
+            CapabilityConstants.MessageTags,
         };
 
         private string[] _acknowledgedCapabilities;
