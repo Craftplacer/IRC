@@ -1,16 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Craftplacer.IRC.Messages;
+using Craftplacer.IRC.Entities;
 
 namespace Craftplacer.IRC.Events
 {
     public class MessageReceivedEventArgs : IrcEventArgs
     {
-        public MessageReceivedEventArgs([NotNull] IrcClient client, [NotNull] IrcProtocolMessage message) : base(client)
+        public MessageReceivedEventArgs([NotNull] IrcClient client, [NotNull] IrcMessage message) : base(client)
         {
             Message = message;
         }
 
-        public IrcProtocolMessage Message { get; }
+        public IrcMessage Message { get; }
     }
 }
