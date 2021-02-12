@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
+using Craftplacer.IRC.Entities;
+using Craftplacer.IRC.Events;
 using Craftplacer.IRC.Raw.Events;
 using Craftplacer.IRC.Raw.Messages;
 
@@ -151,6 +153,18 @@ namespace Craftplacer.IRC
 
                                 break;
                             }
+                        }
+
+                        break;
+                    }
+
+                    case "PRIVMSG":
+                    {
+                        if (!CheckForExpected(e.Message))
+                        {
+                            var message = new IrcMessage(this, e.Message);
+                            var pme = new MessageReceivedEventArgs(this, message);
+                            MessageReceived?.Invoke(this, pme);
                         }
 
                         break;

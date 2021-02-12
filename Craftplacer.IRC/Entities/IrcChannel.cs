@@ -2,5 +2,6 @@
 {
     public class IrcChannel
     {
+        public string Name { get; internal set; }
     }
 }

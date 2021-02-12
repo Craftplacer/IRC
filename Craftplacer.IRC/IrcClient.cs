@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Craftplacer.IRC.Entities;
+using Craftplacer.IRC.Events;
+using Craftplacer.IRC.Helpers;
 using Craftplacer.IRC.Raw;
 using Craftplacer.IRC.Raw.Messages;
 
@@ -22,6 +25,8 @@ namespace Craftplacer.IRC
         private static readonly string[] _supportedCapabilities = new string[]
         {
             CapabilityConstants.MessageTags,
+            CapabilityConstants.MessageIDs,
+            CapabilityConstants.EchoMessage,
         };
 
         private readonly ConcurrentDictionary<Predicate<RawMessage>, TaskCompletionSource<RawMessage>> _expectedMessages;
@@ -50,6 +55,11 @@ namespace Craftplacer.IRC
             return await tcs.Task;
         }
 
+        internal bool HasCapability(string capability)
+        {
+            return _serverCapabilities.Contains(capability.ToLowerInvariant());
+        }
+
         public IrcClient()
         {
             _expectedMessages = new ConcurrentDictionary<Predicate<RawMessage>, TaskCompletionSource<RawMessage>>(2, 5);
@@ -57,6 +67,8 @@ namespace Craftplacer.IRC
             Raw = new RawIrcClient();
             Raw.MessageReceived += Raw_MessageReceived;
         }
+
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         /// <summary>
         /// The server welcomed the client and is willing to operate.
@@ -168,10 +180,24 @@ namespace Craftplacer.IRC
         /// </summary>
         /// <param name="target">The channel or user where the message will be sent to. Use # to specify a channel.</param>
         /// <param name="message">The message to send</param>
-        public async Task SendMessageAsync(string target, string message)
+        /// <returns>An <see cref="IrcMessage"/> if the server supports "echo-message" otherwise <see cref="null"/>.</returns>
+        public async Task<IrcMessage> SendMessageAsync(string target, string message)
         {
             var privMsg = new RawMessage("PRIVMSG", target, message);
-            await Raw.SendMessageAsync(privMsg);
+
+            if (HasCapability(CapabilityConstants.EchoMessage))
+            {
+                var arrivedMessage = await SendRequest(privMsg, (r) =>
+                {
+                    return r.Command == "PRIVMSG" && Utilities.ExtractHostmask(r.Source).Username == Nickname;
+                });
+                return new IrcMessage(this, arrivedMessage);
+            }
+            else
+            {
+                await Raw.SendMessageAsync(privMsg);
+                return null;
+            }
         }
     }
 }
