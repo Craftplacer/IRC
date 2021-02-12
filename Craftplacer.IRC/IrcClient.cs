@@ -132,7 +132,10 @@ namespace Craftplacer.IRC
             await Raw.SendMessageAsync(new RawMessage("USER", Nickname, "*", "*", RealName));
         }
 
-        public void Dispose() => ((IDisposable)Raw).Dispose();
+        public void Dispose()
+        {
+            ((IDisposable)Raw).Dispose();
+        }
 
         /// <summary>
         /// Sends a message to the specified target.

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -32,10 +33,10 @@ namespace Craftplacer.IRC.Raw.Messages
         public string[] Parameters { get; }
 
         [MaybeNull]
-        public Dictionary<string, string> Tags { get; }
+        public string Source { get; }
 
         [MaybeNull]
-        public string Source { get; }
+        public Dictionary<string, string> Tags { get; }
 
         public static RawMessage Parse(string line)
         {
@@ -99,6 +100,24 @@ namespace Craftplacer.IRC.Raw.Messages
             return new RawMessage(command, parameters.ToArray(), source, tags);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is RawMessage raw)
+            {
+                return raw.Command == Command
+                    && raw.Source == Source
+                    && Utilities.SafeSequenceEqual(raw.Parameters, Parameters)
+                    && Utilities.SafeSequenceEqual(raw.Tags, Tags);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Command, this.Parameters, this.Tags, this.Source);
+        }
+
         public override string ToString()
         {
             var values = new List<string>();
@@ -155,20 +174,5 @@ namespace Craftplacer.IRC.Raw.Messages
 
             return string.Join(CharConstants.SpaceCharacter, values);
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is RawMessage raw)
-            {
-                return raw.Command == Command
-                    && raw.Source == Source
-                    && Utilities.SafeSequenceEqual(raw.Parameters, Parameters)
-                    && Utilities.SafeSequenceEqual(raw.Tags, Tags);
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode() => (Command, Parameters, Tags, Source).GetHashCode();
     }
 }

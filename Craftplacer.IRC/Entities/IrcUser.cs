@@ -22,6 +22,9 @@ namespace Craftplacer.IRC.Entities
             await Client.SendMessageAsync(Username, message);
         }
 
-        public override string ToString() => $"{Nickname}!{Username}@{Host}";
+        public override string ToString()
+        {
+            return $"{Nickname}!{Username}@{Host}";
+        }
     }
 }

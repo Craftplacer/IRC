@@ -12,8 +12,7 @@ namespace Craftplacer.IRC.Events
             Channel = channel;
         }
 
-        public IrcUser UserJoined { get; }
-
         public IrcChannel Channel { get; }
+        public IrcUser UserJoined { get; }
     }
 }

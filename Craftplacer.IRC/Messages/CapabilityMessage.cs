@@ -13,16 +13,8 @@ namespace Craftplacer.IRC.Messages
             Parameters = parameters.ToList();
         }
 
-        public string SubCommand { get; set; }
-
         public List<string> Parameters { get; set; }
-
-        public override RawMessage ProtocolMessage
-        {
-            get
-            {
-                return new RawMessage("CAP", new[] { SubCommand }.Concat(Parameters).ToArray());
-            }
-        }
+        public override RawMessage ProtocolMessage => new RawMessage("CAP", new[] { SubCommand }.Concat(Parameters).ToArray());
+        public string SubCommand { get; set; }
     }
 }

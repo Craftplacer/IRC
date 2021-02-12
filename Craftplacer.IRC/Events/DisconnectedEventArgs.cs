@@ -14,8 +14,7 @@ namespace Craftplacer.IRC.Events
             Reason = (Exception = exception)?.Message;
         }
 
-        public string Reason { get; }
-
         public Exception Exception { get; }
+        public string Reason { get; }
     }
 }

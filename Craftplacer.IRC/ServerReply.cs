@@ -355,7 +355,7 @@ namespace Craftplacer.IRC
         [Obsolete(ServerReply_Classifications._obsolete)]
         ERR_NOSERVICEHOST = 492,
 
-        ERR_UMODEUNKNOWNFLAG = 491,
+        ERR_UMODEUNKNOWNFLAG = 501,
         ERR_USERSDONTMATCH = 502,
     }
 }

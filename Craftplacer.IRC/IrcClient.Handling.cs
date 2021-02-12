@@ -30,6 +30,7 @@ namespace Craftplacer.IRC
                         {
                             _motdBuffer.AppendLine(e.Message.Parameters[1]);
                         }
+
                         break;
                     }
 
@@ -134,8 +135,10 @@ namespace Craftplacer.IRC
                     }
 
                     case "PING":
-                        e.Client.SendMessageAsync(new RawMessage("PONG", e.Message.Parameters[0]));
+                    {
+                        await e.Client.SendMessageAsync(new RawMessage("PONG", e.Message.Parameters[0]));
                         break;
+                    }
 
                     default:
                     {

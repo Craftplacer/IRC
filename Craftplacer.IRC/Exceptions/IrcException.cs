@@ -12,9 +12,9 @@ namespace Craftplacer.IRC.Exceptions
             Request = request;
         }
 
-        public ServerReply Reply { get; }
         public string Message { get; }
-        public RawMessage Response { get; }
+        public ServerReply Reply { get; }
         public RawMessage Request { get; }
+        public RawMessage Response { get; }
     }
 }

@@ -12,43 +12,19 @@ namespace Craftplacer.IRC.Raw
     // TODO: Look into async disposing
     public class RawIrcClient : IDisposable
     {
-        public RawIrcClient()
-        {
-            tcp = new TcpClient();
-        }
+        private readonly TcpClient _tcp;
 
-        private readonly TcpClient tcp;
-        private Stream stream;
-        private StreamWriter writer;
-        private StreamReader reader;
+        private StreamReader _reader;
 
-        public event EventHandler<RawMessageReceivedEventArgs> MessageReceived;
+        private Stream _stream;
 
-        public bool Connected => tcp.Connected;
-
-        public async Task ConnectAsync(string host, int port, bool ssl = false)
-        {
-            await tcp.ConnectAsync(host, port);
-
-            stream = tcp.GetStream();
-
-            // Wrap SSL around NetworkStream if the user wants an encrypted connection.
-            if (ssl)
-            {
-                stream = new SslStream(stream);
-            }
-
-            reader = new StreamReader(stream);
-            writer = new StreamWriter(stream);
-
-            _ = Task.Run(ListenAsync);
-        }
+        private StreamWriter _writer;
 
         private async Task ListenAsync()
         {
-            while (tcp.Connected)
+            while (_tcp.Connected)
             {
-                var line = await reader.ReadLineAsync();
+                var line = await _reader.ReadLineAsync();
 
                 if (line == null)
                 {
@@ -61,19 +37,46 @@ namespace Craftplacer.IRC.Raw
             }
         }
 
-        public async Task SendMessageAsync(RawMessage message)
+        public RawIrcClient()
         {
-            var line = message.ToString();
-            await writer.WriteLineAsync(line);
-            await writer.FlushAsync();
+            _tcp = new TcpClient();
+        }
+
+        public event EventHandler<RawMessageReceivedEventArgs> MessageReceived;
+
+        public bool Connected => _tcp.Connected;
+
+        public async Task ConnectAsync(string host, int port, bool ssl = false)
+        {
+            await _tcp.ConnectAsync(host, port);
+
+            _stream = _tcp.GetStream();
+
+            // Wrap SSL around NetworkStream if the user wants an encrypted connection.
+            if (ssl)
+            {
+                _stream = new SslStream(_stream);
+            }
+
+            _reader = new StreamReader(_stream);
+            _writer = new StreamWriter(_stream);
+
+            _ = Task.Run(ListenAsync);
         }
 
         public void Dispose()
         {
-            writer?.Dispose();
-            reader?.Dispose();
-            stream?.Dispose();
-            tcp.Dispose();
+            _writer?.Dispose();
+            _reader?.Dispose();
+            _stream?.Dispose();
+            _tcp.Dispose();
+        }
+
+        public async Task SendMessageAsync(RawMessage message)
+        {
+            var line = message.ToString();
+            await _writer.WriteLineAsync(line);
+            await _writer.FlushAsync();
         }
     }
 }

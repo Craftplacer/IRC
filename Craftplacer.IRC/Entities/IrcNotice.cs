@@ -2,9 +2,9 @@
 {
     public class IrcNotice
     {
-        public string User;
         public string Message;
         public string Source;
+        public string User;
 
         public IrcNotice(string source, string user, string message)
         {

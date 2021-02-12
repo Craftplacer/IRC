@@ -10,9 +10,8 @@ namespace Craftplacer.IRC.Messages
             RealName = realName;
         }
 
-        public string Username { get; }
-        public string RealName { get; }
-
         public override RawMessage ProtocolMessage => new RawMessage("USER", Username, "0", "*", RealName);
+        public string RealName { get; }
+        public string Username { get; }
     }
 }
