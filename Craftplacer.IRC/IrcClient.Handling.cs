@@ -10,6 +10,28 @@ namespace Craftplacer.IRC
 {
     public partial class IrcClient
     {
+        private bool CheckForExpected(RawMessage raw)
+        {
+            var matchingKey = _expectedMessages.Keys.FirstOrDefault(p => p.Invoke(raw));
+            if (matchingKey == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (_expectedMessages.TryRemove(matchingKey, out var tcs))
+                {
+                    tcs.SetResult(raw);
+                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine("Failed to retrieve TCS for expected message");
+                    return false;
+                }
+            }
+        }
+
         private async void Raw_MessageReceived(object sender, RawMessageReceivedEventArgs e)
         {
             // Check if the received message is a server reply or a command.
@@ -142,7 +164,11 @@ namespace Craftplacer.IRC
 
                     default:
                     {
-                        Debug.WriteLine("Unhandled IRC message: {0}", e.Message);
+                        if (!CheckForExpected(e.Message))
+                        {
+                            Debug.WriteLine("Unhandled IRC message: {0}", e.Message);
+                        }
+
                         break;
                     }
                 }

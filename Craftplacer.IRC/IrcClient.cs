@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Craftplacer.IRC.Raw;
@@ -18,6 +24,7 @@ namespace Craftplacer.IRC
             CapabilityConstants.MessageTags,
         };
 
+        private readonly ConcurrentDictionary<Predicate<RawMessage>, TaskCompletionSource<RawMessage>> _expectedMessages;
         private string[] _acknowledgedCapabilities;
         private StringBuilder _motdBuffer;
         private bool _negotiatingCapabilities = false;
@@ -26,8 +33,27 @@ namespace Craftplacer.IRC
         private string _realName;
         private string[] _serverCapabilities;
 
+        /// <summary>
+        /// Sends a message and waits for an incoming message over a condition.
+        /// </summary>
+        private async Task<RawMessage> SendRequest(RawMessage sendingMessage, Predicate<RawMessage> predicate)
+        {
+            var tcs = new TaskCompletionSource<RawMessage>();
+
+            if (!_expectedMessages.TryAdd(predicate, tcs))
+            {
+                throw new Exception("An expected message with the same condition already exists.");
+            }
+
+            await Raw.SendMessageAsync(sendingMessage);
+
+            return await tcs.Task;
+        }
+
         public IrcClient()
         {
+            _expectedMessages = new ConcurrentDictionary<Predicate<RawMessage>, TaskCompletionSource<RawMessage>>(2, 5);
+
             Raw = new RawIrcClient();
             Raw.MessageReceived += Raw_MessageReceived;
         }
