@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Craftplacer.IRC
+namespace Craftplacer.IRC.Exceptions
 {
     [Serializable]
     public class NotConnectedException : InvalidOperationException
