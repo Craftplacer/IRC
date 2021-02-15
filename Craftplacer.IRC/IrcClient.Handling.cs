@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Craftplacer.IRC.Entities;
 using Craftplacer.IRC.Events;
@@ -10,6 +12,7 @@ using Craftplacer.IRC.Raw.Messages;
 
 namespace Craftplacer.IRC
 {
+    [SuppressMessage("ReSharper", "PossiblyMistakenUseOfParamsMethod", Justification = "System.Diagnostics.Debug is a bitch")]
     public partial class IrcClient
     {
         private bool CheckForExpected(RawMessage raw)
@@ -40,151 +43,163 @@ namespace Craftplacer.IRC
             if (ushort.TryParse(e.Message.Command, out var replyNum))
             {
                 var reply = (ServerReply)replyNum;
-                switch (reply)
-                {
-                    case ServerReply.RPL_WELCOME:
-                    {
-                        Welcome?.Invoke(this, EventArgs.Empty);
-                        break;
-                    }
-
-                    case ServerReply.RPL_MOTD:
-                    {
-                        if (_motdBuffer != null)
-                        {
-                            _motdBuffer.AppendLine(e.Message.Parameters[1]);
-                        }
-
-                        break;
-                    }
-
-                    case ServerReply.RPL_MOTDSTART:
-                    {
-                        if (_motdBuffer == null)
-                        {
-                            _motdBuffer = new StringBuilder();
-                        }
-
-                        _motdBuffer.AppendLine(e.Message.Parameters[1]);
-                        break;
-                    }
-
-                    case ServerReply.RPL_MOTDEND:
-                    {
-                        Motd = _motdBuffer.ToString();
-                        _motdBuffer.Clear();
-                        break;
-                    }
-
-                    case ServerReply.RPL_LUSERCLIENT:
-                    case ServerReply.RPL_LUSEROP:
-                    case ServerReply.RPL_LUSERUNKNOWN:
-                    case ServerReply.RPL_LUSERCHANNELS:
-                    case ServerReply.RPL_LUSERME:
-                    case ServerReply.RPL_LOCALUSERS:
-                    case ServerReply.RPL_GLOBALUSERS:
-                    {
-                        // Those reply contain strings intended for humans, thus can't be parsed.
-                        break;
-                    }
-
-                    default:
-                    {
-                        Debug.WriteLine("Unhandled IRC server reply: {1} ({0}) {2}", e.Message.Command, reply, string.Join(' ', e.Message.Parameters));
-                        break;
-                    }
-                }
+                HandleServerReply(reply, e.Message);
             }
             else
             {
-                switch (e.Message.Command)
+                await HandleCommand(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles a message with a numeric server reply like <see cref="ServerReply.RPL_WELCOME"/>.
+        /// </summary>
+        private void HandleServerReply(ServerReply reply, RawMessage message)
+        {
+            switch (reply)
+            {
+                case ServerReply.RPL_WELCOME:
                 {
-                    case "CAP":
+                    Welcome?.Invoke(this, EventArgs.Empty);
+                    break;
+                }
+
+                case ServerReply.RPL_MOTD:
+                {
+                    _motdBuffer?.AppendLine(message.Parameters[1]);
+                    break;
+                }
+
+                case ServerReply.RPL_MOTDSTART:
+                {
+                    _motdBuffer ??= new StringBuilder();
+                    _motdBuffer.AppendLine(message.Parameters[1]);
+                    break;
+                }
+
+                case ServerReply.RPL_MOTDEND:
+                {
+                    Motd = _motdBuffer.ToString();
+                    _motdBuffer.Clear();
+                    break;
+                }
+
+                case ServerReply.RPL_LUSERCLIENT:
+                case ServerReply.RPL_LUSEROP:
+                case ServerReply.RPL_LUSERUNKNOWN:
+                case ServerReply.RPL_LUSERCHANNELS:
+                case ServerReply.RPL_LUSERME:
+                case ServerReply.RPL_LOCALUSERS:
+                case ServerReply.RPL_GLOBALUSERS:
+                {
+                    // Those reply contain strings intended for humans, thus can't be parsed.
+                    break;
+                }
+
+                default:
+                {
+                    Debug.WriteLine("Unhandled IRC server reply: {1} ({0}) {2}", message.Command, reply, string.Join(' ', message.Parameters));
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles a message with a command like "PRIVMSG"
+        /// </summary>
+        private async Task HandleCommand(RawMessage message)
+        {
+            switch (message.Command)
+            {
+                case "CAP":
+                {
+                    var capCommand = message.Parameters[1];
+                    switch (capCommand)
                     {
-                        var capCommand = e.Message.Parameters[1];
-                        switch (capCommand)
+                        case "LS":
                         {
-                            case "LS":
+                            if (_negotiatingCapabilities)
                             {
-                                if (_negotiatingCapabilities)
-                                {
-                                    break;
-                                }
-
-                                _serverCapabilities = e.Message.Parameters[2].Split(' ');
-                                Debug.WriteLine("Offered capabilities: {0}", args: string.Join(", ", _serverCapabilities));
-
-                                var supportedCapabilities = _serverCapabilities.Where(sc => _supportedCapabilities.Contains(sc));
-
-                                if (supportedCapabilities.Any())
-                                {
-                                    _negotiatingCapabilities = true;
-                                    await Raw.SendMessageAsync(new RawMessage("CAP", "REQ", string.Join(' ', supportedCapabilities)));
-                                }
-                                else
-                                {
-                                    // We don't support any of the offered capabilities, we end here.
-                                    await Raw.SendMessageAsync(new RawMessage("CAP", "END"));
-                                    Debug.WriteLine("Negotiated no capabilities");
-                                }
-
                                 break;
                             }
 
-                            case "ACK":
-                            {
-                                if (!_negotiatingCapabilities)
-                                {
-                                    break;
-                                }
+                            _serverCapabilities = message.Parameters[2].Split(' ').ToArray();
+                            Debug.WriteLine("Offered capabilities: {0}", args: string.Join(", ", _serverCapabilities));
 
-                                _acknowledgedCapabilities = e.Message.Parameters[2].Split(' ');
+                            var supportedCapabilities = _serverCapabilities
+                                    .Where(sc => _supportedCapabilities.Contains(sc))
+                                    .ToArray();
+
+                            if (supportedCapabilities.Any())
+                            {
+                                _negotiatingCapabilities = true;
+                                await Raw.SendMessageAsync(new RawMessage("CAP", "REQ",
+                                    string.Join(' ', supportedCapabilities)));
+                            }
+                            else
+                            {
+                                // We don't support any of the offered capabilities, we end here.
                                 await Raw.SendMessageAsync(new RawMessage("CAP", "END"));
-
-                                _negotiatingCapabilities = false;
-                                Debug.WriteLine("Finished negotiating capabilities: {0}", args: string.Join(", ", _acknowledgedCapabilities));
-
-                                break;
+                                Debug.WriteLine("Negotiated no capabilities");
                             }
 
-                            default:
+                            break;
+                        }
+
+                        case "ACK":
+                        {
+                            if (!_negotiatingCapabilities)
                             {
-                                Debug.WriteLine("Unhandled capability command: {0}", args: capCommand);
-
                                 break;
                             }
+
+                            _acknowledgedCapabilities = message.Parameters[2].Split(' ');
+                            await Raw.SendMessageAsync(new RawMessage("CAP", "END"));
+
+                            _negotiatingCapabilities = false;
+                            Debug.WriteLine("Finished negotiating capabilities: {0}",
+                                args: string.Join(", ", _acknowledgedCapabilities));
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                    case "PRIVMSG":
-                    {
-                        if (!CheckForExpected(e.Message))
+                        default:
                         {
-                            var message = new IrcMessage(this, e.Message);
-                            var pme = new MessageReceivedEventArgs(this, message);
-                            MessageReceived?.Invoke(this, pme);
+                            Debug.WriteLine("Unhandled capability command: {0}", args: capCommand);
+
+                            break;
                         }
-
-                        break;
                     }
 
-                    case "PING":
+                    break;
+                }
+
+                case "PRIVMSG":
+                {
+                    if (!CheckForExpected(message))
                     {
-                        await e.Client.SendMessageAsync(new RawMessage("PONG", e.Message.Parameters[0]));
-                        break;
+                        var ircMessage = new IrcMessage(this, message);
+                        var pme = new MessageReceivedEventArgs(this, ircMessage);
+                        MessageReceived?.Invoke(this, pme);
                     }
 
-                    default:
+                    break;
+                }
+
+                case "PING":
+                {
+                    await Raw.SendMessageAsync(new RawMessage("PONG", message.Parameters[0]));
+                    break;
+                }
+
+                default:
+                {
+                    if (!CheckForExpected(message))
                     {
-                        if (!CheckForExpected(e.Message))
-                        {
-                            Debug.WriteLine("Unhandled IRC message: {0}", e.Message);
-                        }
-
-                        break;
+                        Debug.WriteLine("Unhandled IRC message: {0}", message);
                     }
+
+                    break;
                 }
             }
         }
