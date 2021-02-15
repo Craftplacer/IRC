@@ -11,12 +11,22 @@ namespace Craftplacer.IRC.Formatting
     /// </summary>
     public static class MircParser
     {
+        private static readonly Dictionary<char, Func<IToken>> TokenDictionary = new Dictionary<char, Func<IToken>>
+        {
+            {'\x02', () => new FormattingToggleToken(FormattingToggleTokenType.Bold) },
+            {'\x1D', () => new FormattingToggleToken(FormattingToggleTokenType.Italic) },
+            {'\x1E', () => new FormattingToggleToken(FormattingToggleTokenType.Strikethrough) },
+            {'\x1F', () => new FormattingToggleToken(FormattingToggleTokenType.Underline) },
+            {'\x11', () => new FormattingToggleToken(FormattingToggleTokenType.Monospace) },
+            {'\x0F', () => new ResetFormattingToken() }
+        };
+        
         public static IToken[] Deformat(string message)
         {
             var list = new List<IToken>();
-
             var textBuffer = new StringBuilder();
 
+            // Turns text left inside the text buffer into a plain text token
             void FinishTextToken()
             {
                 if (textBuffer.Length == 0)
@@ -36,113 +46,75 @@ namespace Craftplacer.IRC.Formatting
                 }
             
                 var @char = message[i];
-                switch (@char)
+                if (TokenDictionary.TryGetValue(@char, out var constructor))
                 {
-                    case '\x02': // bold
-                    {
-                        FinishTextToken();
-                        list.Add(new FormattingToggleToken(FormattingToggleTokenType.Bold));
-                        break;
-                    }
-                    case '\x1D': // italic
-                    {
-                        FinishTextToken();
-                        list.Add(new FormattingToggleToken(FormattingToggleTokenType.Italic));
-                        break;
-                    }
-                    case '\x1f': // underline
-                    {
-                        FinishTextToken();
-                        list.Add(new FormattingToggleToken(FormattingToggleTokenType.Underline));
-                        break;
-                    }
-                    case '\x1e': // strikethrough
-                    {
-                        FinishTextToken();
-                        list.Add(new FormattingToggleToken(FormattingToggleTokenType.Strikethrough));
-                        break;
-                    }
-                    case '\x11': // monospace
-                    {
-                        FinishTextToken();
-                        list.Add(new FormattingToggleToken(FormattingToggleTokenType.Monospace));
-                        break;
-                    }
-                    case '\x0F':
-                    {
-                        FinishTextToken();
-                        list.Add(new ResetFormattingToken());
-                        break;
-                    }
-                    case '\x03': // color
-                    {
-                        FinishTextToken();
-                        
-                        i++;
-                        
-                        byte? ReadDigits()
-                        {
-                            var digitStartI = i;
-                            
-                            for (var j = 0; j < 2; j++, i++)
-                            {
-                                if (!char.IsDigit(message[i]))
-                                    break;
-                            }
-
-                            var diff = i - digitStartI;
-                            if (diff == 0)
-                                return null;
-
-                            var digitsSubstring = message[digitStartI..i];
-                            return byte.Parse(digitsSubstring);
-                        }
-
-                        byte? fg = ReadDigits();
-                        byte? bg = null;
-
-                        if (fg != null)
-                        {
-                            if (message[i] == ',')
-                            {
-                                i++;
-
-                                bg = ReadDigits();
-
-                                if (bg == null)
-                                {
-                                    i--;
-                                }
-
-                                i--;
-                            }
-                            else
-                            {
-                                i--;
-                            }
-                        }
-                        else
-                        {
-                            
-                            i--;
-                        }
-                            
-
-                        list.Add(new FormattingColorToken(fg, bg));
-
-                        break;
-                    }
-                    default:
-                    {
-                        textBuffer.Append(@char);
-                        break;
-                    }
+                    FinishTextToken();
+                    list.Add(constructor.Invoke());
+                }
+                else if (@char == '\x03')
+                {
+                    FinishTextToken();
+                    list.Add(ParseColorCode(message, ref i));
+                }
+                else
+                {
+                    textBuffer.Append(@char);
                 }
             }
 
+            // finish up
             FinishTextToken();
-
             return list.ToArray();
+        }
+
+        private static FormattingColorToken ParseColorCode(string message, ref int i)
+        {
+            i++;
+                    
+            byte? fg;
+            byte? bg = null;
+
+            (fg, i) = ReadDigits(message, i);
+
+            if (fg != null && message[i] == ',')
+            {
+                i++;
+
+                (bg, i) = ReadDigits(message, i);
+
+                if (bg == null)
+                    i--;
+            }
+
+            i--;
+
+            return new FormattingColorToken(fg, bg);
+        }
+        
+        /// <summary>
+        /// Reads 2 digits until reaching a non-digit.
+        /// </summary>
+        /// <param name="string"></param>
+        /// <param name="i"></param>
+        /// <returns>The digits that were read, Digits is null when none were read. Index defines the last index that was worked with.</returns>
+        private static (byte? Digits, int Index) ReadDigits(string @string, int i)
+        {
+            var startI = i;
+
+            while (i - startI < 2)
+            {
+                if (!char.IsDigit(@string[i]))
+                    break;
+                
+                i++;
+            }
+
+            var diff = i - startI;
+            if (diff == 0)
+                return (null, i);
+
+            var digitsSubstring = @string[startI..i];
+            return (byte.Parse(digitsSubstring), i);
         }
     }
 }
