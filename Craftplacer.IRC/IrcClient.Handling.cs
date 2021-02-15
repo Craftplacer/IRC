@@ -127,7 +127,7 @@ namespace Craftplacer.IRC
                             Debug.WriteLine("Offered capabilities: {0}", args: string.Join(", ", _serverCapabilities));
 
                             var supportedCapabilities = _serverCapabilities
-                                    .Where(sc => _supportedCapabilities.Contains(sc))
+                                    .Where(sc => SupportedCapabilities.Contains(sc))
                                     .ToArray();
 
                             if (supportedCapabilities.Any())

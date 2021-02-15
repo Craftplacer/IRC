@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Craftplacer.IRC.Entities;
 using Craftplacer.IRC.Events;
+using Craftplacer.IRC.Exceptions;
 using Craftplacer.IRC.Helpers;
 using Craftplacer.IRC.Raw;
 using Craftplacer.IRC.Raw.Messages;
@@ -22,7 +19,7 @@ namespace Craftplacer.IRC
     // TODO: Require setting nick and real name.
     public partial class IrcClient : IDisposable
     {
-        private static readonly string[] _supportedCapabilities = new string[]
+        private static readonly string[] SupportedCapabilities =
         {
             CapabilityConstants.MessageTags,
             CapabilityConstants.MessageIDs,
@@ -32,7 +29,7 @@ namespace Craftplacer.IRC
         private readonly ConcurrentDictionary<Predicate<RawMessage>, TaskCompletionSource<RawMessage>> _expectedMessages;
         private string[] _acknowledgedCapabilities;
         private StringBuilder _motdBuffer;
-        private bool _negotiatingCapabilities = false;
+        private bool _negotiatingCapabilities;
         private string _nickname;
         private string _password;
         private string _realName;
@@ -187,7 +184,7 @@ namespace Craftplacer.IRC
 
             if (HasCapability(CapabilityConstants.EchoMessage))
             {
-                var arrivedMessage = await SendRequest(privMsg, (r) =>
+                var arrivedMessage = await SendRequest(privMsg, r =>
                 {
                     return r.Command == "PRIVMSG" && Utilities.ExtractHostmask(r.Source).Username == Nickname;
                 });

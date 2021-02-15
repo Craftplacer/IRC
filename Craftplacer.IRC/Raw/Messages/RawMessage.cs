@@ -11,14 +11,14 @@ namespace Craftplacer.IRC.Raw.Messages
     // https://modern.ircdocs.horse/index.html#messages
     public class RawMessage
     {
-        public RawMessage(string command, params string[] parameters) : this(command, parameters, null, null)
+        public RawMessage(string command, params string[] parameters) : this(command, parameters, null)
         {
         }
 
         public RawMessage(string command, string[] parameters = null, string source = null, Dictionary<string, string> tags = null)
         {
             if (string.IsNullOrWhiteSpace(command))
-                throw new System.ArgumentException($"'{nameof(command)}' cannot be null or whitespace", nameof(command));
+                throw new ArgumentException($"'{nameof(command)}' cannot be null or whitespace", nameof(command));
 
             Command = command;
             Source = source;

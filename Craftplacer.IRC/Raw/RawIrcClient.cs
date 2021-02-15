@@ -10,6 +10,11 @@ using Craftplacer.IRC.Raw.Messages;
 namespace Craftplacer.IRC.Raw
 {
     // TODO: Look into async disposing
+    // TODO: Add disconnection events
+    // TODO: Add manual disconnect
+    /// <summary>
+    /// A "low level" IRC client, that only handles parsing and writing messages and the connection itself.
+    /// </summary>
     public class RawIrcClient : IDisposable
     {
         private readonly TcpClient _tcp;

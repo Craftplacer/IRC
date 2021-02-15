@@ -8,14 +8,14 @@ namespace Craftplacer.IRC.Tests
 {
     public class RawMessageTests
     {
-        public static IEnumerable<object[]> RawMessageCases => new object[][]
+        public static IEnumerable<object[]> RawMessageCases => new[]
         {
             new object[]
             {
                 ":irc.example.com CAP * LIST :",
                 new RawMessage("CAP",
                                source: "irc.example.com",
-                               parameters: new string[]{ "*", "LIST", "" },
+                               parameters: new[]{ "*", "LIST", "" },
                                tags: null),
             },
             new object[]
@@ -23,7 +23,7 @@ namespace Craftplacer.IRC.Tests
                 "CAP * LS :multi-prefix sasl",
                 new RawMessage("CAP",
                                source: null,
-                               parameters: new string[]{ "*", "LS", "multi-prefix sasl" },
+                               parameters: new[]{ "*", "LS", "multi-prefix sasl" },
                                tags: null)
             },
             new object[]
@@ -31,7 +31,7 @@ namespace Craftplacer.IRC.Tests
                 "CAP REQ :sasl message-tags foo",
                 new RawMessage("CAP",
                                source: null,
-                               parameters: new string[]{ "REQ", "sasl message-tags foo" },
+                               parameters: new[]{ "REQ", "sasl message-tags foo" },
                                tags: null),
             },
             new object[]
@@ -39,7 +39,7 @@ namespace Craftplacer.IRC.Tests
                 ":dan!d@localhost PRIVMSG #chan Hey!",
                 new RawMessage("PRIVMSG",
                                source: "dan!d@localhost",
-                               parameters: new string[]{ "#chan", "Hey!" },
+                               parameters: new[]{ "#chan", "Hey!" },
                                tags: null)
             },
             new object[]
@@ -47,7 +47,7 @@ namespace Craftplacer.IRC.Tests
                 ":Macha!~macha@unaffiliated/macha PRIVMSG #botwar :Test response",
                 new RawMessage("PRIVMSG",
                                source: "Macha!~macha@unaffiliated/macha",
-                               parameters: new string[]{ "#botwar", "Test response" },
+                               parameters: new[]{ "#botwar", "Test response" },
                                tags: null)
             },
             new object[]
@@ -55,7 +55,7 @@ namespace Craftplacer.IRC.Tests
                 "@id=234AB :dan!d@localhost PRIVMSG #chan :Hey what's up!",
                 new RawMessage("PRIVMSG",
                                source: "dan!d@localhost",
-                               parameters: new string[]{ "#chan", "Hey what's up!" },
+                               parameters: new[]{ "#chan", "Hey what's up!" },
                                tags: new Dictionary<string, string> { { "id", "234AB" } })
             }
         };

@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Craftplacer.IRC
 {
-    internal static class ServerReply_Classifications
+    internal static class ServerReplyClassifications
     {
         // https://tools.ietf.org/html/rfc1459.html#section-6.3
-        internal const string _obsolete = "This numeric is either no longer in use, reserved or not a generic feature.";
+        internal const string Obsolete = "This numeric is either no longer in use, reserved or not a generic feature.";
     }
 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Names are directly taken from the RFC to stay consistant")]
+    [SuppressMessage("ReSharper", "IdentifierTypo")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum ServerReply : ushort
     {
         RPL_WELCOME = 001,
@@ -36,7 +40,7 @@ namespace Craftplacer.IRC
         /* ... */
         RPL_TRACENEWTYPE = 208,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_TRACECLASS = 209,
 
         RPL_STATSLINKINFO = 211,
@@ -44,22 +48,22 @@ namespace Craftplacer.IRC
 
         #region Obsolete line stats 213 - 218
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSCLINE = 213,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSNLINE = 214,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSILINE = 215,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSKLINE = 216,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSQLINE = 217,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSYLINE = 218,
 
         #endregion Obsolete line stats 213 - 218
@@ -71,29 +75,29 @@ namespace Craftplacer.IRC
 
         #region Obsolete services 231 - 235
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_SERVICEINFO = 231,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_ENDOFSERVICES = 232,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_SERVICE = 233,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_SERVLIST = 234,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_SERVLISTEND = 235,
 
         #endregion Obsolete services 231 - 235
 
         #region Obsolete line stats 240 - 241
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSVLINE = 240,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSLLINE = 241,
 
         #endregion Obsolete line stats 240 - 241
@@ -103,19 +107,19 @@ namespace Craftplacer.IRC
 
         #region Obsolete line stats 244 - 250
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSHLINE = 244,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSSLINE = 245,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSPING = 246,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSBLINE = 247,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_STATSDLINE = 250,
 
         #endregion Obsolete line stats 244 - 250
@@ -139,7 +143,7 @@ namespace Craftplacer.IRC
         RPL_WHOISCERTFP = 276,
         /* ... */
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_NONE = 300,
 
         RPL_AWAY = 301,
@@ -154,7 +158,7 @@ namespace Craftplacer.IRC
         RPL_WHOWASUSER = 314,
         RPL_ENDOFWHO = 315,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_WHOISCHANOP = 316,
 
         RPL_WHOISIDLE = 317,
@@ -188,13 +192,13 @@ namespace Craftplacer.IRC
 
         #region Obsolete closes and kills 361 - 363
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_KILLDONE = 361,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_CLOSING = 362,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_CLOSEEND = 363,
 
         #endregion Obsolete closes and kills 361 - 363
@@ -209,7 +213,7 @@ namespace Craftplacer.IRC
         RPL_INFO = 371,
         RPL_MOTD = 372,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_INFOSTART = 373,
 
         RPL_ENDOFINFO = 374,
@@ -220,7 +224,7 @@ namespace Craftplacer.IRC
         RPL_REHASHING = 382,
         RPL_YOURESERVICE = 383,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         RPL_MYPORTIS = 384,
 
         /* ... */
@@ -307,7 +311,7 @@ namespace Craftplacer.IRC
         /// </summary>
         ERR_YOUREBANNEDCREEP = 465,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         ERR_YOUWILLBEBANNED = 466,
 
         ERR_KEYSET = 467,
@@ -318,7 +322,7 @@ namespace Craftplacer.IRC
         ERR_BANNEDFROMCHAN = 474,
         ERR_BADCHANNELKEY = 475,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         ERR_BADCHANMASK = 476,
 
         ERR_NOCHANMODES = 477,
@@ -352,7 +356,7 @@ namespace Craftplacer.IRC
         /* ... */
         ERR_NOOPERHOST = 491,
 
-        [Obsolete(ServerReply_Classifications._obsolete)]
+        [Obsolete(ServerReplyClassifications.Obsolete)]
         ERR_NOSERVICEHOST = 492,
 
         ERR_UMODEUNKNOWNFLAG = 501,
