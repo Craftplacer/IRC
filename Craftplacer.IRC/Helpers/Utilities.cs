@@ -6,7 +6,7 @@ namespace Craftplacer.IRC.Helpers
 {
     public static class Utilities
     {
-        internal static (string Nickname, string Username, string Host) ExtractHostmask(string hostmask)
+        public static (string Nickname, string Username, string Host) ExtractHostmask(string hostmask)
         {
             var hostSplit = hostmask.Split('@', 2);
             var host = hostSplit[1];
@@ -14,20 +14,19 @@ namespace Craftplacer.IRC.Helpers
             return (userSplit[0], userSplit[1], host);
         }
 
-        internal static bool SafeSequenceEqual<T>(IEnumerable<T> a, IEnumerable<T> b)
+        public static bool SafeSequenceEqual<T>(IEnumerable<T> a, IEnumerable<T> b)
         {
             if (a == null)
             {
                 return b == null;
             }
-            else if (b == null)
+
+            if (b == null)
             {
                 return false;
             }
-            else
-            {
-                return a.SequenceEqual(b);
-            }
+
+            return a.SequenceEqual(b);
         }
     }
 }
